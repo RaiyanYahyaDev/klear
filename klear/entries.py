@@ -39,6 +39,9 @@ def delete_json(file_name):
 
 def dump_json(file_name, json_data):
     try:
+        if not os.path.exists(path_to_klear() + file_name):
+            with open(path_to_klear() + file_name, "w+") as outfile:
+                json.dump(json_data, outfile)
         if os.path.exists(path_to_klear() + file_name):
             with open(path_to_klear() + file_name, "w+") as outfile:
                 json.dump(json_data, outfile)
@@ -67,4 +70,3 @@ def create_local_settings(user, hostname, port):
     klear["rooms"] = rooms
 
     dump_json("klear.json", klear)
-    # delete_json("creds.json")

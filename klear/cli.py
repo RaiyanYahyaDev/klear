@@ -101,7 +101,7 @@ def connect_room(room, user):
     if room == 'General':
         client_start(session_json[room], user)
     else:
-        client_start('127.0.0.1/1234',user)
+        client_start(session_json['hostname']+'/'+session_json['port'],user)
 def update_session():
     session_json = get_klear_session()
 
@@ -187,7 +187,7 @@ def main(version):
             + Pretty.ENDC
         )
         if general_room == "Y":
-            connect_room("General", session_json["username"])
+            connect_room("General", session_json["username"]+'#General')
         if general_room == "N":
             list_room_options()
         if general_room != "Y" and general_room != "N":
