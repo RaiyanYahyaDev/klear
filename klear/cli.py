@@ -1,11 +1,8 @@
-import sys
 import click
 from klear import __version__ as VERSION
 from klear.entries import *
 import pyfiglet
 from klear.Pretty import Pretty
-from datetime import datetime
-import socket
 from PyInquirer import style_from_dict, Token, prompt
 from klear.klear_client import *
 
@@ -38,21 +35,13 @@ def check_connection_to_server(hostname, port):
 
 
 def register_new_user():
-    print(
-        Pretty.OKGREEN
-        + "Looks like you are a new user . Let's get you started !! \n "
-        + Pretty.ENDC
-    )
+    print(Pretty.OKGREEN + "Looks like you are a new user . Let's get you started !! \n " + Pretty.ENDC)
     global __user__
     __user__ = click.prompt(Pretty.OKGREEN + "Please enter a user name  " + Pretty.ENDC)
     global hostname
-    hostname = click.prompt(
-        Pretty.OKGREEN + "Please enter the klear server hostname  " + Pretty.ENDC
-    )
+    hostname = click.prompt(Pretty.OKGREEN + "Please enter the klear server hostname  " + Pretty.ENDC)
     global port
-    port = click.prompt(
-        Pretty.OKGREEN + "Please enter the klear server port  " + Pretty.ENDC
-    )
+    port = click.prompt(Pretty.OKGREEN + "Please enter the klear server port  " + Pretty.ENDC)
     server_check = check_connection_to_server(hostname, port)
     if server_check:
         print(Pretty.OKGREEN + "Everything looks good !! \n " + Pretty.ENDC)
@@ -64,16 +53,6 @@ def register_new_user():
 
 def print_errors(message):
     print(Pretty.FAIL + message + Pretty.ENDC)
-
-
-def start_log_session():
-    pass
-
-
-def get_file_name():
-    now = datetime.now()
-    timestamp = str(datetime.timestamp(now)) + ".json"
-    return timestamp
 
 
 style = style_from_dict(
@@ -90,7 +69,7 @@ style = style_from_dict(
 def enter_room(room_name):
     print(
         Pretty.OKGREEN
-        + ("Connected to room {} !! \n ").format(room_name)
+        + "Connected to room {} !! \n ".format(room_name)
         + Pretty.ENDC
     )
 
@@ -101,7 +80,9 @@ def connect_room(room, user):
     if room == 'General':
         client_start(session_json[room], user)
     else:
-        client_start(session_json['hostname']+'/'+session_json['port'],user)
+        client_start(session_json['hostname'] + '/' + session_json['port'], user)
+
+
 def update_session():
     session_json = get_klear_session()
 
@@ -133,18 +114,18 @@ def list_room_options():
         print(
             Pretty.HEADER + "Joined the room " + room_name["which_room"] + Pretty.ENDC
         )
-        roomname = '#'+room_name["which_room"]
-        connect_room(room_name["which_room"], session_json["username"]+roomname)
+        roomname = '#' + room_name["which_room"]
+        connect_room(room_name["which_room"], session_json["username"] + roomname)
     elif room_choice["room"] == "Join a room":
         join_room = click.prompt(Pretty.OKGREEN + "Please enter the room name  " + Pretty.ENDC)
-        add_room_to_contacts(session_json,join_room)
+        add_room_to_contacts(session_json, join_room)
         update_session()
-        connect_room(join_room,session_json["username"]+'#'+join_room)
+        connect_room(join_room, session_json["username"] + '#' + join_room)
     elif room_choice["room"] == "Create a new room":
         new_room = click.prompt(Pretty.OKGREEN + "Please enter a new room name  " + Pretty.ENDC)
-        add_room_to_contacts(session_json,new_room)
+        add_room_to_contacts(session_json, new_room)
         update_session()
-        connect_room(new_room,session_json["username"]+'#'+new_room)
+        connect_room(new_room, session_json["username"] + '#' + new_room)
 
 
 @click.command()
@@ -166,7 +147,7 @@ def main(version):
             + Pretty.ENDC
         )
         if general_room == "Y":
-            connect_room("General", session_json["username"]+'#General')
+            connect_room("General", session_json["username"] + '#General')
         if general_room == "N":
             list_room_options()
         if general_room != "Y" and general_room != "N":
@@ -175,19 +156,11 @@ def main(version):
     else:
         register_new_user()
         session_json = get_klear_session()
-        print(
-            Pretty.OKBLUE
-            + (" \n Welcome to KLEAR {} , let's get started !! \n ".format(__user__))
-            + Pretty.ENDC
-        )
+        print(Pretty.OKBLUE + (" \n Welcome to KLEAR {} , let's get started !! \n ".format(__user__)) + Pretty.ENDC)
 
-        general_room = click.prompt(
-            Pretty.OKGREEN
-            + "Do you want to connect to the general room [Y/N]"
-            + Pretty.ENDC
-        )
+        general_room = click.prompt(Pretty.OKGREEN + "Do you want to connect to the general room [Y/N]" + Pretty.ENDC)
         if general_room == "Y":
-            connect_room("General", session_json["username"]+'#General')
+            connect_room("General", session_json["username"] + '#General')
         if general_room == "N":
             list_room_options()
         if general_room != "Y" and general_room != "N":
