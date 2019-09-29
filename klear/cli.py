@@ -98,7 +98,12 @@ def enter_room(room_name):
 def connect_room(room, user):
     os.system("cls" if os.name == "nt" else "clear")
     enter_room(room)
-    client_start(session_json[room], user)
+    if room == 'General':
+        client_start(session_json[room], user)
+    else:
+        client_start('127.0.0.1/1234',user)
+def update_session():
+    session_json = get_klear_session()
 
 
 def list_room_options():
@@ -128,15 +133,18 @@ def list_room_options():
         print(
             Pretty.HEADER + "Joined the room " + room_name["which_room"] + Pretty.ENDC
         )
-        connect_room(room_name["which_room"], session_json["username"])
+        roomname = '#'+room_name["which_room"]
+        connect_room(room_name["which_room"], session_json["username"]+roomname)
     elif room_choice["room"] == "Join a room":
         join_room = click.prompt(Pretty.OKGREEN + "Please enter the room name  " + Pretty.ENDC)
-        add_room_to_contacts(join_room)
-        start_client(join_room)
+        add_room_to_contacts(session_json,join_room)
+        update_session()
+        connect_room(join_room,session_json["username"]+'#'+join_room)
     elif room_choice["room"] == "Create a new room":
         new_room = click.prompt(Pretty.OKGREEN + "Please enter a new room name  " + Pretty.ENDC)
-        add_room_to_contacts(new_room)
-        start_client(new_room)
+        add_room_to_contacts(session_json,new_room)
+        update_session()
+        connect_room(new_room,session_json["username"]+'#'+new_room)
 
 
 @click.command()
@@ -158,7 +166,7 @@ def main(version):
             + Pretty.ENDC
         )
         if general_room == "Y":
-            connect_room("General", session_json["username"])
+            connect_room("General", session_json["username"]+'#General')
         if general_room == "N":
             list_room_options()
         if general_room != "Y" and general_room != "N":

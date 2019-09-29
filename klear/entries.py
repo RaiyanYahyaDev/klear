@@ -39,31 +39,32 @@ def delete_json(file_name):
 
 def dump_json(file_name, json_data):
     try:
-        if not os.path.exists(path_to_klear() + file_name):
+        if os.path.exists(path_to_klear() + file_name):
             with open(path_to_klear() + file_name, "w+") as outfile:
                 json.dump(json_data, outfile)
     except IOError as io_exception:
         print_errors(
-            "Could not create "
-            + file_name
-            + " on disk , please raise this issue on the repository"
-        )
+            "Could not create room")
         raise IOError(str(io_exception))
+
+
+def add_room_to_contacts(session_json,room_name):
+    listroom = session_json['rooms']
+    print('creating room')
+    listroom.append(room_name)
+    session_json['rooms'] = listroom
+    dump_json('klear.json',session_json)
 
 
 def create_local_settings(user, hostname, port):
     klear = {}
     rooms = []
     rooms.append("General")
-    klear["username"]= user
-    klear["hostname"]= hostname
+    klear["username"] = user
+    klear["hostname"] = hostname
     klear["port"] = port
-    klear["General"]= hostname + "/" + port
+    klear["General"] = hostname + "/" + port
     klear["rooms"] = rooms
 
-
     dump_json("klear.json", klear)
-    #delete_json("creds.json")
-
-
-
+    # delete_json("creds.json")
