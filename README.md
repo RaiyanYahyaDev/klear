@@ -2,6 +2,8 @@
 
 Klear is a simple , clean and effective way to text between teams. Text between friends or teams from the cli. Klear is built with python and only uses sockets for communication.
 
+Klear is based out of sentdex's youtube tutorial on sockets and chat with python.
+
 #### Note: Klear is still in development. The developer is not responsible for any issues caused.
 ## Installation
 
